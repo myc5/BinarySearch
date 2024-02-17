@@ -1,0 +1,14 @@
+D:\Downloads\zL\C#\binarysearch\bin\Debug\net8.0\BinarySearch.exe
+D:\Downloads\zL\C#\binarysearch\bin\Debug\net8.0\BinarySearch.deps.json
+D:\Downloads\zL\C#\binarysearch\bin\Debug\net8.0\BinarySearch.runtimeconfig.json
+D:\Downloads\zL\C#\binarysearch\bin\Debug\net8.0\BinarySearch.dll
+D:\Downloads\zL\C#\binarysearch\bin\Debug\net8.0\BinarySearch.pdb
+D:\Downloads\zL\C#\binarysearch\obj\Debug\net8.0\BinarySearch.GeneratedMSBuildEditorConfig.editorconfig
+D:\Downloads\zL\C#\binarysearch\obj\Debug\net8.0\BinarySearch.AssemblyInfoInputs.cache
+D:\Downloads\zL\C#\binarysearch\obj\Debug\net8.0\BinarySearch.AssemblyInfo.cs
+D:\Downloads\zL\C#\binarysearch\obj\Debug\net8.0\BinarySearch.csproj.CoreCompileInputs.cache
+D:\Downloads\zL\C#\binarysearch\obj\Debug\net8.0\BinarySearch.dll
+D:\Downloads\zL\C#\binarysearch\obj\Debug\net8.0\refint\BinarySearch.dll
+D:\Downloads\zL\C#\binarysearch\obj\Debug\net8.0\BinarySearch.pdb
+D:\Downloads\zL\C#\binarysearch\obj\Debug\net8.0\BinarySearch.genruntimeconfig.cache
+D:\Downloads\zL\C#\binarysearch\obj\Debug\net8.0\ref\BinarySearch.dll
