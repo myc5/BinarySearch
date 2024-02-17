@@ -8,8 +8,7 @@ var randomNumber = new Random();
 int upperRange = 300;
 
 int count = 1;
-int result;
-
+int guess = -2;
 
 Console.WriteLine("[1]Play the guessing game yourself\n[2]Have the computer play against itself.");
 
@@ -21,12 +20,13 @@ if (gameMode == "1")
 {
     Console.WriteLine($"Guess the number between 0 and {upperRange}. Enter '-1' to quit.");
     int target = randomNumber.Next(upperRange);
-    Console.WriteLine(target);
+    // Console.WriteLine($"Target number: {target}");
     bool loopStatus = true;
 
     while (loopStatus)
     {
-        int guess = Int32.Parse(Console.ReadLine());
+        try {guess = Int32.Parse(Console.ReadLine());}
+        catch (System.FormatException) {Console.WriteLine("Please only enter numbers."); continue;}
         if (guess == -1) { Console.WriteLine("Aborting."); break; }
         if (guess == target)
         {
@@ -62,8 +62,7 @@ if (gameMode == "2")
     }
 
     int target2 = randomNumber.Next(upperRange);
-    Console.WriteLine($"Target num {target2}");
-    int randDelay = randomNumber.Next(300, 1000);
+    //Console.WriteLine($"Target number: {target2}");
     int low = 0;
     int high = upperRange;
     bool loopStatus = true;
