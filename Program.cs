@@ -2,7 +2,7 @@
 // Have to deal with non-num inputs in that case though -- Done.
 // Using string.Compare() for this was a bad idea and won't always work; Target of 188 and a guess of 1000 will tell you that 1000 is too low, presumably because the first 3 digits (100) are smaller than 118
 // Using Int32.Parse() instead in this version
-
+// Added a 3rd game mode where you can play against the computer, mostly as a practice for coding (now there is switch, normal if/else, and ref functions)
 
 var randomNumber = new Random();
 int upperRange = 300;
@@ -10,11 +10,11 @@ int upperRange = 300;
 int count = 1;
 int guess = -2;
 
-Console.WriteLine("[1]Play the guessing game yourself\n[2]Have the computer play against itself.");
+Console.WriteLine("[1] Play the guessing game yourself\n[2] Have the computer play against itself\n[3] Play against the computer");
 
 string gameMode = Console.ReadLine();
 
-if (gameMode is not ("1" or "2")) { Console.WriteLine("Invalid input, defaulting to interactive mode."); gameMode = "1"; }
+if (gameMode is not ("1" or "2" or "3")) { Console.WriteLine("Invalid input, defaulting to interactive mode. (1)"); gameMode = "1"; }
 
 if (gameMode == "1")
 {
@@ -107,6 +107,55 @@ if (gameMode == "2")
     }
 }
 
+if (gameMode == "3")
+{
+    bool loopStatus = true;
+    //computer player settings
+    int low = 0;
+    int high = upperRange;
+    int guess2;
+    Console.WriteLine($"Guess the number between 0 and {upperRange}. You and the computer will take alternating turns. Whoever guesses correctly first, wins. Enter '-1' to quit.");
+    int target = randomNumber.Next(upperRange);
+    Console.WriteLine($"Target number: {target}");
+
+    while (true)
+    {
+        try {guess = Int32.Parse(Console.ReadLine());}
+        catch (System.FormatException) {Console.WriteLine("Please only enter numbers."); continue;}
+        if (guess == -1) { Console.WriteLine("Aborting."); break; }
+        GetResult(guess, target, "Human player", ref loopStatus, ref low, ref high); //moved most of the calculation into a function just to see if I could
+        if (loopStatus){ // moved loop status here with an else break because otherwise the computer gets another before the loop aborts
+        guess2 = (low + high) / 2;
+        Console.WriteLine(guess2);
+        Thread.Sleep(randomNumber.Next(300, 1000));
+        GetResult(guess2, target, "Computer player", ref loopStatus, ref low, ref high);
+        } else{ break;}
+    }
+}
+
+
+
+static void GetResult(int guess, int target, string player, ref bool loopStatus, ref int low, ref int high){
+    if (guess == target)
+        {
+            Console.WriteLine($"The {player} wins!");
+            loopStatus = false;
+        }
+
+        else if (guess < target)
+        {
+            Console.WriteLine($"{player}'s guess was too low.");
+            low = guess;
+        }
+
+        else if (guess > target)
+        {
+            Console.WriteLine($"{player}'s guess was too high.");
+            high = guess;  
+        }
+
+
+}
 
 static int ConvertToSwitchCase(int guess, int target)
 {
