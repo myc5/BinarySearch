@@ -4,23 +4,44 @@
 // Using Int32.Parse() instead in this version
 // Added a 3rd game mode where you can play against the computer, mostly as a practice for coding (now there is switch, normal if/else, and ref functions)
 
+
+
 var randomNumber = new Random();
 int upperRange = 300;
 
 int count = 1;
 int guess;
 
-Console.WriteLine("[1] Play the guessing game yourself\n[2] Have the computer play against itself\n[3] Play against the computer");
 
-string gameMode = Console.ReadLine();
 
-if (gameMode is not ("1" or "2" or "3")) { Console.WriteLine("Invalid input, defaulting to interactive mode. (1)"); gameMode = "1"; }
+do{
+string gameMode = "0";
+bool debug = false;
+Console.WriteLine("[1] Play the guessing game yourself\n[2] Have the computer play against itself\n[3] Play against the computer\n[4] Show generated number for debug: [OFF]");
+
+while (gameMode is not ("1" or "2" or "3"))
+{
+gameMode = Console.ReadLine();
+if (gameMode == "4" && !debug)
+{
+    Console.WriteLine("[1] Play the guessing game yourself\n[2] Have the computer play against itself\n[3] Play against the computer\n[4] Show generated number for debug: [ON]");
+    debug = true;
+
+}
+else if (gameMode == "4" && debug) {
+    Console.WriteLine("[1] Play the guessing game yourself\n[2] Have the computer play against itself\n[3] Play against the computer\n[4] Show generated number for debug: [OFF]");
+    debug = false;
+
+
+}
+}
+
 
 if (gameMode == "1")
 {
     Console.WriteLine($"Guess the number between 0 and {upperRange}. Enter '-1' to quit.");
     int target = randomNumber.Next(upperRange);
-    // Console.WriteLine($"Target number: {target}");
+    if (debug) {Console.WriteLine($"Target number: {target}");}
     bool loopStatus = true;
 
     while (loopStatus)
@@ -62,7 +83,7 @@ if (gameMode == "2")
     }
 
     int target2 = randomNumber.Next(upperRange);
-    //Console.WriteLine($"Target number: {target2}");
+    if (debug) {Console.WriteLine($"Target number: {target2}");}
     int low = 0;
     int high = upperRange;
     bool loopStatus = true;
@@ -117,7 +138,7 @@ if (gameMode == "3")
     int guess2;
     Console.WriteLine($"Guess the number between 0 and {upperRange}. You and the computer will take alternating turns. Whoever guesses correctly first, wins. Enter '-1' to quit.");
     int target = randomNumber.Next(upperRange);
-    //Console.WriteLine($"Target number: {target}");
+    if (debug) {Console.WriteLine($"Target number: {target}");}
 
     while (loopStatus)
     {
@@ -136,7 +157,8 @@ if (gameMode == "3")
         else { break; }
     }
 }
-
+Console.WriteLine("Run again? [Y/n]");
+} while (Console.ReadLine().ToLower() != "n");
 
 
 static void GetResult(int guess, int target, string player, ref bool loopStatus, ref int low, ref int high)
