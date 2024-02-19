@@ -4,15 +4,12 @@
 // Using Int32.Parse() instead in this version
 // Added a 3rd game mode where you can play against the computer, mostly as a practice for coding (now there is switch, normal if/else, and ref functions)
 
-
-
 var randomNumber = new Random();
 int upperRange = 300;
 
 int count = 1;
 int guess;
-
-
+bool skipRerunQuestion = false; // if the user wants to abort by entering "-1", we will not ask the rerun question and break out within the first loop
 
 do
 {
@@ -50,7 +47,7 @@ do
         {
             try { guess = Int32.Parse(Console.ReadLine()); }
             catch (System.FormatException) { Console.WriteLine("Please only enter numbers."); continue; }
-            if (guess == -1) { Console.WriteLine("Aborting."); break; }
+            if (guess == -1) { Console.WriteLine("Aborting."); skipRerunQuestion = true; break; } // do not ask rerun question if user requests the abort
             if (guess == target)
             {
                 if (count == 1) { Console.WriteLine($"You did it! You got it on the first try, wow!"); }
@@ -146,7 +143,7 @@ do
         {
             try { guess = Int32.Parse(Console.ReadLine()); } //Convert.ToInt32 works similarly but accepts null values; Int32.Parse throws an exception
             catch (System.FormatException) { Console.WriteLine("Please only enter numbers."); continue; }
-            if (guess == -1) { Console.WriteLine("Aborting."); break; }
+            if (guess == -1) { Console.WriteLine("Aborting."); skipRerunQuestion = true; break; }
             GetResult(guess, target, "Human player", ref loopStatus, ref low, ref high); //moved most of the calculation into a function just to see if I could
             if (loopStatus)
             { // moved loop status here with an else break because otherwise the computer gets another before the loop aborts
@@ -159,6 +156,7 @@ do
             else { break; }
         }
     }
+    if (skipRerunQuestion) { break; }
     Console.WriteLine("Run again? [Y/n]");
 } while (Console.ReadLine().ToLower() != "n");
 
