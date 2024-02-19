@@ -56,8 +56,8 @@ if (gameMode == "2")
     string choice = Console.ReadLine();
     if (choice != "")
     {
-
-        upperRange = Int32.Parse(choice);
+        try {upperRange = Int32.Parse(choice);}
+        catch (System.FormatException) { Console.WriteLine($"Invalid input. Defaulting to 0 - {upperRange}.");}
 
     }
 
@@ -68,6 +68,7 @@ if (gameMode == "2")
     bool loopStatus = true;
     int oldGuess, duplicateGuessOccurance = 0;
     int guess2 = (low + high) / 2;
+    
 
     while (loopStatus)
     {
@@ -90,16 +91,16 @@ if (gameMode == "2")
         {
             case 0:
                 if (count == 1) { Console.WriteLine($"You did it! You got it on the first try, wow!"); }
-                else { Console.WriteLine($"You did it! It took you {count} attempts."); }
+                else { Console.WriteLine($"Skynet did it! It only took it {count} attempts."); }
                 loopStatus = false;
                 break;
             case -1:
-                Console.WriteLine("Your guess was too low.");
+                Console.WriteLine("Computer's guess was too low.");
                 count++;
                 low = guess2;
                 break;
             case 1:
-                Console.WriteLine("Your guess was too high.");
+                Console.WriteLine("Computer's guess was too high.");
                 high = guess2;
                 count++;
                 break;
@@ -116,17 +117,18 @@ if (gameMode == "3")
     int guess2;
     Console.WriteLine($"Guess the number between 0 and {upperRange}. You and the computer will take alternating turns. Whoever guesses correctly first, wins. Enter '-1' to quit.");
     int target = randomNumber.Next(upperRange);
-    Console.WriteLine($"Target number: {target}");
+    //Console.WriteLine($"Target number: {target}");
 
-    while (true)
+    while (loopStatus)
     {
-        try { guess = Int32.Parse(Console.ReadLine()); }
+        try { guess = Int32.Parse(Console.ReadLine()); } //Convert.ToInt32 works similarly but accepts null values; Int32.Parse throws an exception
         catch (System.FormatException) { Console.WriteLine("Please only enter numbers."); continue; }
         if (guess == -1) { Console.WriteLine("Aborting."); break; }
         GetResult(guess, target, "Human player", ref loopStatus, ref low, ref high); //moved most of the calculation into a function just to see if I could
         if (loopStatus)
         { // moved loop status here with an else break because otherwise the computer gets another before the loop aborts
             guess2 = (low + high) / 2;
+            Thread.Sleep(randomNumber.Next(300, 1000));
             Console.WriteLine(guess2);
             Thread.Sleep(randomNumber.Next(300, 1000));
             GetResult(guess2, target, "Computer player", ref loopStatus, ref low, ref high);
@@ -148,16 +150,20 @@ static void GetResult(int guess, int target, string player, ref bool loopStatus,
     else if (guess < target)
     {
         Console.WriteLine($"{player}'s guess was too low.");
-        low = guess;
+        if (player == "Computer player" || guess == (low + high) / 2) { 
+            low = guess;
+}
     }
 
     else if (guess > target)
     {
         Console.WriteLine($"{player}'s guess was too high.");
-        high = guess;
+        if (player == "Computer player" || guess == (low + high) / 2) { 
+            high = guess;
+}
+
+
     }
-
-
 }
 
 static int ConvertToSwitchCase(int guess, int target)
@@ -166,6 +172,7 @@ static int ConvertToSwitchCase(int guess, int target)
     if (guess < target) { return -1; }
     else { return 0; }
 }
+
 
 /* Faulty version that uses String Comparison, keeping this here as a reminder for myself; see L3 about why this did not work.
 int guess = Int32.Parse(Console.ReadLine());
