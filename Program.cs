@@ -14,150 +14,152 @@ int guess;
 
 
 
-do{
-string gameMode = "0";
-bool debug = false;
-Console.WriteLine("[1] Play the guessing game yourself\n[2] Have the computer play against itself\n[3] Play against the computer\n[4] Show generated number for debug: [OFF]");
-
-while (gameMode is not ("1" or "2" or "3"))
+do
 {
-gameMode = Console.ReadLine();
-if (gameMode == "4" && !debug)
-{
-    Console.WriteLine("[1] Play the guessing game yourself\n[2] Have the computer play against itself\n[3] Play against the computer\n[4] Show generated number for debug: [ON]");
-    debug = true;
-
-}
-else if (gameMode == "4" && debug) {
+    string gameMode = "0";
+    bool debug = false;
     Console.WriteLine("[1] Play the guessing game yourself\n[2] Have the computer play against itself\n[3] Play against the computer\n[4] Show generated number for debug: [OFF]");
-    debug = false;
 
-
-}
-}
-
-
-if (gameMode == "1")
-{
-    Console.WriteLine($"Guess the number between 0 and {upperRange}. Enter '-1' to quit.");
-    int target = randomNumber.Next(upperRange);
-    if (debug) {Console.WriteLine($"Target number: {target}");}
-    bool loopStatus = true;
-
-    while (loopStatus)
+    while (gameMode is not ("1" or "2" or "3"))
     {
-        try { guess = Int32.Parse(Console.ReadLine()); }
-        catch (System.FormatException) { Console.WriteLine("Please only enter numbers."); continue; }
-        if (guess == -1) { Console.WriteLine("Aborting."); break; }
-        if (guess == target)
+        gameMode = Console.ReadLine();
+        if (gameMode == "4" && !debug)
         {
-            if (count == 1) { Console.WriteLine($"You did it! You got it on the first try, wow!"); }
-            else { Console.WriteLine($"You did it! It took you {count} attempts."); }
-            loopStatus = false;
-        }
-        else if (guess < target)
-        {
-            Console.WriteLine("Your guess was too low.");
-            count++;
-        }
+            Console.WriteLine("[1] Play the guessing game yourself\n[2] Have the computer play against itself\n[3] Play against the computer\n[4] Show generated number for debug: [ON]");
+            debug = true;
 
-        else if (guess > target)
+        }
+        else if (gameMode == "4" && debug)
         {
+            Console.WriteLine("[1] Play the guessing game yourself\n[2] Have the computer play against itself\n[3] Play against the computer\n[4] Show generated number for debug: [OFF]");
+            debug = false;
 
-            Console.WriteLine("Your guess was too high.");
-            count++;
+
         }
     }
-}
 
 
-if (gameMode == "2")
-{
-    Console.WriteLine($"The Computer will play against itself. You may set a custom upper range. Press Enter to use the default (0-{upperRange}).");
-    string choice = Console.ReadLine();
-    if (choice != "")
+    if (gameMode == "1")
     {
-        try {upperRange = Int32.Parse(choice);}
-        catch (System.FormatException) { Console.WriteLine($"Invalid input. Defaulting to 0 - {upperRange}.");}
+        Console.WriteLine($"Guess the number between 0 and {upperRange}. Enter '-1' to quit.");
+        int target = randomNumber.Next(upperRange);
+        if (debug) { Console.WriteLine($"Target number: {target}"); }
+        bool loopStatus = true;
 
-    }
-
-    int target2 = randomNumber.Next(upperRange);
-    if (debug) {Console.WriteLine($"Target number: {target2}");}
-    int low = 0;
-    int high = upperRange;
-    bool loopStatus = true;
-    int oldGuess, duplicateGuessOccurance = 0;
-    int guess2 = (low + high) / 2;
-    
-
-    while (loopStatus)
-    {
-        oldGuess = guess2;
-        guess2 = (low + high) / 2;
-        if (oldGuess == guess2)
+        while (loopStatus)
         {
-            duplicateGuessOccurance++;
-            if (duplicateGuessOccurance == 2)
+            try { guess = Int32.Parse(Console.ReadLine()); }
+            catch (System.FormatException) { Console.WriteLine("Please only enter numbers."); continue; }
+            if (guess == -1) { Console.WriteLine("Aborting."); break; }
+            if (guess == target)
             {
-                guess2++; duplicateGuessOccurance = 0;
-            } //Due to integer rounding the guess sometimes gets stuck 1 off of the target, fix this here if the guess doesn't change between loops more than once.
-
-        }
-
-        Console.WriteLine(guess2);
-        Thread.Sleep(randomNumber.Next(300, 1000)); //add a (random) pause so the human can actually follow the exchange
-
-        switch (ConvertToSwitchCase(guess2, target2)) // gameMode1 above was using switch cases before which I wanted to reproduce; it now uses normal int comparison operators, but I am keeping this in here as practice
-        {
-            case 0:
                 if (count == 1) { Console.WriteLine($"You did it! You got it on the first try, wow!"); }
-                else { Console.WriteLine($"Skynet did it! It only took it {count} attempts."); }
+                else { Console.WriteLine($"You did it! It took you {count} attempts."); }
                 loopStatus = false;
-                break;
-            case -1:
-                Console.WriteLine("Computer's guess was too low.");
+            }
+            else if (guess < target)
+            {
+                Console.WriteLine("Your guess was too low.");
                 count++;
-                low = guess2;
-                break;
-            case 1:
-                Console.WriteLine("Computer's guess was too high.");
-                high = guess2;
+            }
+
+            else if (guess > target)
+            {
+
+                Console.WriteLine("Your guess was too high.");
                 count++;
-                break;
+            }
         }
     }
-}
 
-if (gameMode == "3")
-{
-    bool loopStatus = true;
-    //computer player settings
-    int low = 0;
-    int high = upperRange;
-    int guess2;
-    Console.WriteLine($"Guess the number between 0 and {upperRange}. You and the computer will take alternating turns. Whoever guesses correctly first, wins. Enter '-1' to quit.");
-    int target = randomNumber.Next(upperRange);
-    if (debug) {Console.WriteLine($"Target number: {target}");}
 
-    while (loopStatus)
+    if (gameMode == "2")
     {
-        try { guess = Int32.Parse(Console.ReadLine()); } //Convert.ToInt32 works similarly but accepts null values; Int32.Parse throws an exception
-        catch (System.FormatException) { Console.WriteLine("Please only enter numbers."); continue; }
-        if (guess == -1) { Console.WriteLine("Aborting."); break; }
-        GetResult(guess, target, "Human player", ref loopStatus, ref low, ref high); //moved most of the calculation into a function just to see if I could
-        if (loopStatus)
-        { // moved loop status here with an else break because otherwise the computer gets another before the loop aborts
-            guess2 = (low + high) / 2;
-            Thread.Sleep(randomNumber.Next(300, 1000));
-            Console.WriteLine(guess2);
-            Thread.Sleep(randomNumber.Next(300, 1000));
-            GetResult(guess2, target, "Computer player", ref loopStatus, ref low, ref high);
+        Console.WriteLine($"The Computer will play against itself. You may set a custom upper range. Press Enter to use the default (0-{upperRange}).");
+        string choice = Console.ReadLine();
+        if (choice != "")
+        {
+            try { upperRange = Int32.Parse(choice); }
+            catch (System.FormatException) { Console.WriteLine($"Invalid input. Defaulting to 0 - {upperRange}."); }
+
         }
-        else { break; }
+
+        int target2 = randomNumber.Next(upperRange);
+        if (debug) { Console.WriteLine($"Target number: {target2}"); }
+        int low = 0;
+        int high = upperRange;
+        bool loopStatus = true;
+        int oldGuess, duplicateGuessOccurance = 0;
+        int guess2 = (low + high) / 2;
+
+
+        while (loopStatus)
+        {
+            oldGuess = guess2;
+            guess2 = (low + high) / 2;
+            if (oldGuess == guess2)
+            {
+                duplicateGuessOccurance++;
+                if (duplicateGuessOccurance == 2)
+                {
+                    guess2++; duplicateGuessOccurance = 0;
+                } //Due to integer rounding the guess sometimes gets stuck 1 off of the target, fix this here if the guess doesn't change between loops more than once.
+
+            }
+
+            Console.WriteLine(guess2);
+            Thread.Sleep(randomNumber.Next(300, 1000)); //add a (random) pause so the human can actually follow the exchange
+
+            switch (ConvertToSwitchCase(guess2, target2)) // gameMode1 above was using switch cases before which I wanted to reproduce; it now uses normal int comparison operators, but I am keeping this in here as practice
+            {
+                case 0:
+                    if (count == 1) { Console.WriteLine($"You did it! You got it on the first try, wow!"); }
+                    else { Console.WriteLine($"Skynet did it! It only took it {count} attempts."); }
+                    loopStatus = false;
+                    break;
+                case -1:
+                    Console.WriteLine("Computer's guess was too low.");
+                    count++;
+                    low = guess2;
+                    break;
+                case 1:
+                    Console.WriteLine("Computer's guess was too high.");
+                    high = guess2;
+                    count++;
+                    break;
+            }
+        }
     }
-}
-Console.WriteLine("Run again? [Y/n]");
+
+    if (gameMode == "3")
+    {
+        bool loopStatus = true;
+        //computer player settings
+        int low = 0;
+        int high = upperRange;
+        int guess2;
+        Console.WriteLine($"Guess the number between 0 and {upperRange}. You and the computer will take alternating turns. Whoever guesses correctly first, wins. Enter '-1' to quit.");
+        int target = randomNumber.Next(upperRange);
+        if (debug) { Console.WriteLine($"Target number: {target}"); }
+
+        while (loopStatus)
+        {
+            try { guess = Int32.Parse(Console.ReadLine()); } //Convert.ToInt32 works similarly but accepts null values; Int32.Parse throws an exception
+            catch (System.FormatException) { Console.WriteLine("Please only enter numbers."); continue; }
+            if (guess == -1) { Console.WriteLine("Aborting."); break; }
+            GetResult(guess, target, "Human player", ref loopStatus, ref low, ref high); //moved most of the calculation into a function just to see if I could
+            if (loopStatus)
+            { // moved loop status here with an else break because otherwise the computer gets another before the loop aborts
+                guess2 = (low + high) / 2;
+                Thread.Sleep(randomNumber.Next(300, 1000));
+                Console.WriteLine(guess2);
+                Thread.Sleep(randomNumber.Next(300, 1000));
+                GetResult(guess2, target, "Computer player", ref loopStatus, ref low, ref high);
+            }
+            else { break; }
+        }
+    }
+    Console.WriteLine("Run again? [Y/n]");
 } while (Console.ReadLine().ToLower() != "n");
 
 
@@ -172,17 +174,19 @@ static void GetResult(int guess, int target, string player, ref bool loopStatus,
     else if (guess < target)
     {
         Console.WriteLine($"{player}'s guess was too low.");
-        if (player == "Computer player" || guess == (low + high) / 2) { 
+        if (player == "Computer player" || guess == (low + high) / 2)
+        {
             low = guess;
-}
+        }
     }
 
     else if (guess > target)
     {
         Console.WriteLine($"{player}'s guess was too high.");
-        if (player == "Computer player" || guess == (low + high) / 2) { 
+        if (player == "Computer player" || guess == (low + high) / 2)
+        {
             high = guess;
-}
+        }
 
 
     }
